@@ -1,0 +1,20 @@
+[config]
+; The IP address to listen on.
+Host = 127.0.0.1
+; The port to listen on.
+Port = 5000
+; Whether to suppress logs. Errors are always printed. Must be yes or no.
+Quiet = no
+
+; The name for this node. Must be unique across the whole file.
+[local_node]                    
+; The IP address of the node.
+Host = localhost
+; The port of the node.
+Port = 2333
+; The password for the node.
+Password = youshallnotpass
+; Whether to use SSL or not. Must be yes or no.
+Secure = no
+; Bot user ID.
+User_Id = -1
