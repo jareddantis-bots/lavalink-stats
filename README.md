@@ -11,11 +11,14 @@ Expose Lavalink's stats via a simple REST API. Supports multiple Lavalink instan
 
 ## Output
 
-A single endpoint is made available at `/stats/<node_name>`. The output is a JSON object with format like the following:
+A list of configured node IDs is available at `/nodes`. The output is a JSON array of strings `<node_ID>`.
+
+A stats endpoint for each configured node is made available at `/stats/<node_ID>`. The output is a JSON object with format like the following:
 
 ```json
 {
-    "stats": {                   // The stats object received from Lavalink
+    "id": "<node_ID>",
+    "stats": {
         "cpu": {
             "cores": 3,
             "lavalinkLoad": 0.4416202135396792,
@@ -32,6 +35,6 @@ A single endpoint is made available at `/stats/<node_name>`. The output is a JSO
         "playingPlayers": 2,
         "uptime": 9639740844
     },
-    "timestamp": 1670847028747   // Time at which the stats were received from Lavalink
+    "timestamp": 1670847028747
 }
 ```

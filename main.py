@@ -24,6 +24,7 @@ class LavalinkWSClient:
     @property
     def stats(self) -> dict:
         return {
+            'id': self.node_name,
             'stats': self.stats_raw,
             'timestamp': self.stats_timestamp
         }
@@ -104,6 +105,11 @@ for section in config.sections():
 
 # Create Flask app
 app = flask.Flask(__name__)
+
+@app.route('/nodes')
+def nodes():
+    return flask.jsonify(list(clients.keys()))
+
 @app.route('/stats/<node>')
 def stats(node):
     if node not in clients:
