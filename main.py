@@ -29,8 +29,8 @@ class LavalinkWSClient:
             'timestamp': self.stats_timestamp
         }
     
-    def _log(self, msg: str):
-        if not self.quiet:
+    def _log(self, msg: str, error: bool = False):
+        if error or not self.quiet:
             print('[{0}] {1}'.format(self.node_name, msg))
     
     async def connect(self):
@@ -45,30 +45,29 @@ class LavalinkWSClient:
                 }
             )
         except websockets.exceptions.InvalidStatusCode as e:
-            print('[{0}] Could not connect to Lavalink'.format(self.node_name), e)
+            self._log('Could not connect to Lavalink: {0}'.format(e), error=True)
             return
         else:
-            self._log('[{0}] Connected to Lavalink'.format(self.node_name))
+            self._log('Connected to Lavalink'.format(self.node_name))
         
         async for msg in self.ws:
-            self._log('[{0}] Received message: {1}'.format(self.node_name, msg))
+            self._log('Received message: {0}'.format(msg))
             try:
                 msg = json.loads(msg)
             except Exception as e:
-                print('[{0}] Could not parse message'.format(self.node_name), e)
+                self._log('Could not parse message: {0}'.format(e), error=True)
             else:
                 if msg['op'] == 'stats':
                     self.stats_raw = msg
                     self.stats_timestamp = int(time.time() * 1000)
     
-        self._log('[{0}] Connection closed'.format(self.node_name))
+        self._log('Connection closed'.format(self.node_name))
     
     def receive_thread(self, loop: asyncio.AbstractEventLoop):
         coro = self.connect()
         future = asyncio.run_coroutine_threadsafe(coro, loop)
         future.result()
-        if not self.quiet:
-            print('[{0}] Closed thread'.format(self.node_name))
+        self._log('Closed thread'.format(self.node_name))
 
 
 # Read config file
